@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clickbait Hider Settings</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f7f9f9;
+      color: #0f1419;
+      min-height: 100vh;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #000000;
+        color: #e7e9ea;
+      }
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .header-icon {
+      font-size: 32px;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .card {
+        background: #16181c;
+      }
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #536471;
+    }
+
+    select, input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 15px;
+      border: 1px solid #cfd9de;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #0f1419;
+      transition: border-color 0.2s;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      select, input[type="text"], input[type="password"] {
+        background: #1e2732;
+        border-color: #38444d;
+        color: #e7e9ea;
+      }
+    }
+
+    select:focus, input:focus {
+      outline: none;
+      border-color: #1d9bf0;
+    }
+
+    .provider-settings {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #eff3f4;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .provider-settings {
+        border-top-color: #38444d;
+      }
+    }
+
+    .provider-section {
+      display: none;
+    }
+
+    .provider-section.active {
+      display: block;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #1d9bf0;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #1a8cd8;
+    }
+
+    .btn-primary:disabled {
+      background: #8ecdf8;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #1d9bf0;
+      border: 1px solid #1d9bf0;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(29, 155, 240, 0.1);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .status-message {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-top: 16px;
+      display: none;
+    }
+
+    .status-message.success {
+      display: block;
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-message.error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .status-message.success {
+        background: #064e3b;
+        color: #6ee7b7;
+      }
+
+      .status-message.error {
+        background: #450a0a;
+        color: #fca5a5;
+      }
+    }
+
+    .help-text {
+      font-size: 13px;
+      color: #536471;
+      margin-top: 8px;
+    }
+
+    .help-text a {
+      color: #1d9bf0;
+      text-decoration: none;
+    }
+
+    .help-text a:hover {
+      text-decoration: underline;
+    }
+
+    /* API key input with show/hide toggle */
+    .password-wrapper {
+      position: relative;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #536471;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .password-toggle:hover {
+      color: #1d9bf0;
+    }
+
+    /* Reset stats button */
+    .reset-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-top: 1px solid #eff3f4;
+      margin-top: 20px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .reset-section {
+        border-top-color: #38444d;
+      }
+    }
+
+    .reset-info {
+      font-size: 14px;
+    }
+
+    .reset-info span {
+      display: block;
+      color: #536471;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: #f4212e;
+      border: 1px solid #f4212e;
+    }
+
+    .btn-danger:hover {
+      background: rgba(244, 33, 46, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <span class="header-icon">🛡️</span>
+      <h1>Clickbait Hider Settings</h1>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title">LLM Provider</h2>
+
+      <div class="form-group">
+        <label for="providerSelect">Select Provider</label>
+        <select id="providerSelect">
+          <option value="ollama">Ollama (Local)</option>
+          <option value="openai">OpenAI API</option>
+          <option value="anthropic">Anthropic API</option>
+          <option value="chrome-ai">Chrome Built-in AI (Experimental)</option>
+        </select>
+      </div>
+
+      <div class="provider-settings">
+        <!-- Ollama Settings -->
+        <div id="ollama-settings" class="provider-section active">
+          <div class="form-group">
+            <label for="ollamaEndpoint">Endpoint URL</label>
+            <input type="text" id="ollamaEndpoint" placeholder="http://localhost:11434">
+            <p class="help-text">
+              Make sure Ollama is running locally.
+              <a href="https://ollama.com" target="_blank">Download Ollama</a>
+            </p>
+          </div>
+          <div class="form-group">
+            <label for="ollamaModel">Model</label>
+            <input type="text" id="ollamaModel" placeholder="llama3.2">
+            <p class="help-text">Run <code>ollama pull llama3.2</code> to download a model</p>
+          </div>
+          <div class="form-group">
+            <details class="help-text">
+              <summary style="cursor: pointer; color: #1d9bf0;">CORS Setup (required)</summary>
+              <div style="margin-top: 12px; padding: 12px; background: rgba(29, 155, 240, 0.1); border-radius: 8px;">
+                <p style="margin-bottom: 8px;">Ollama must allow requests from browser extensions. Configure CORS by setting:</p>
+                <code style="display: block; background: #1e2732; padding: 8px; border-radius: 4px; margin: 8px 0; word-break: break-all;">OLLAMA_ORIGINS=chrome-extension://*</code>
+                <p style="margin-top: 12px; margin-bottom: 4px;"><strong>Linux (systemd):</strong></p>
+                <code style="display: block; background: #1e2732; padding: 8px; border-radius: 4px; font-size: 12px;">sudo mkdir -p /etc/systemd/system/ollama.service.d<br>
+echo '[Service]<br>
+Environment="OLLAMA_ORIGINS=chrome-extension://*"' | sudo tee /etc/systemd/system/ollama.service.d/override.conf<br>
+sudo systemctl daemon-reload<br>
+sudo systemctl restart ollama</code>
+                <p style="margin-top: 12px; margin-bottom: 4px;"><strong>macOS / Manual:</strong></p>
+                <code style="display: block; background: #1e2732; padding: 8px; border-radius: 4px; font-size: 12px;">OLLAMA_ORIGINS="chrome-extension://*" ollama serve</code>
+                <p style="margin-top: 12px; margin-bottom: 4px;"><strong>Windows:</strong></p>
+                <p style="font-size: 12px;">Set environment variable <code>OLLAMA_ORIGINS</code> to <code>chrome-extension://*</code> in System Properties, then restart Ollama.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <!-- OpenAI Settings -->
+        <div id="openai-settings" class="provider-section">
+          <div class="form-group">
+            <label for="openaiKey">API Key</label>
+            <div class="password-wrapper">
+              <input type="password" id="openaiKey" placeholder="sk-...">
+              <button type="button" class="password-toggle" data-target="openaiKey">Show</button>
+            </div>
+            <p class="help-text">
+              Get your API key from
+              <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a>
+            </p>
+          </div>
+          <div class="form-group">
+            <label for="openaiModel">Model</label>
+            <select id="openaiModel">
+              <option value="gpt-4o-mini">GPT-4o Mini (Recommended)</option>
+              <option value="gpt-4o">GPT-4o</option>
+              <option value="gpt-4-turbo">GPT-4 Turbo</option>
+              <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Anthropic Settings -->
+        <div id="anthropic-settings" class="provider-section">
+          <div class="form-group">
+            <label for="anthropicKey">API Key</label>
+            <div class="password-wrapper">
+              <input type="password" id="anthropicKey" placeholder="sk-ant-...">
+              <button type="button" class="password-toggle" data-target="anthropicKey">Show</button>
+            </div>
+            <p class="help-text">
+              Get your API key from
+              <a href="https://console.anthropic.com/settings/keys" target="_blank">Anthropic Console</a>
+            </p>
+          </div>
+          <div class="form-group">
+            <label for="anthropicModel">Model</label>
+            <select id="anthropicModel">
+              <option value="claude-3-haiku-20240307">Claude 3 Haiku (Recommended)</option>
+              <option value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet</option>
+              <option value="claude-3-opus-20240229">Claude 3 Opus</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Chrome AI Settings -->
+        <div id="chrome-ai-settings" class="provider-section">
+          <div class="form-group">
+            <p class="help-text">
+              Chrome's built-in AI uses Gemini Nano and runs entirely on your device.<br><br>
+              <strong>Requirements:</strong><br>
+              1. Chrome 127+ with experimental features enabled<br>
+              2. Enable <code>chrome://flags/#prompt-api-for-gemini-nano</code><br>
+              3. Download model at <code>chrome://components</code> (Optimization Guide On Device Model)
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div id="statusMessage" class="status-message"></div>
+
+      <div class="btn-group">
+        <button id="testBtn" class="btn btn-secondary">Test Connection</button>
+        <button id="saveBtn" class="btn btn-primary">Save Settings</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title">Data</h2>
+      <div class="reset-section" style="margin-top: 0; padding-top: 0; border: none;">
+        <div class="reset-info">
+          Reset Statistics
+          <span>Clear scanned and hidden post counts</span>
+        </div>
+        <button id="resetStatsBtn" class="btn btn-danger">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

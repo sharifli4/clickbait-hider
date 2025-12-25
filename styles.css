@@ -1,0 +1,116 @@
+/* Clickbait Hider Styles */
+
+/* Blur effect for clickbait tweets */
+.clickbait-blur {
+  filter: blur(8px);
+  transition: filter 0.3s ease;
+  user-select: none;
+}
+
+.clickbait-blur:hover {
+  filter: blur(6px);
+}
+
+/* Overlay container */
+.clickbait-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  border-radius: 16px;
+}
+
+/* Overlay content box */
+.clickbait-overlay-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 30px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .clickbait-overlay-content {
+    background: rgba(30, 30, 30, 0.95);
+    color: #e7e9ea;
+  }
+}
+
+/* Warning text */
+.clickbait-warning {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f59e0b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.clickbait-warning::before {
+  content: "\26A0";
+  font-size: 16px;
+}
+
+/* Reveal button */
+.clickbait-reveal-btn {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #536471;
+  background: transparent;
+  border: 1px solid #cfd9de;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clickbait-reveal-btn:hover {
+  background: #f7f9f9;
+  border-color: #536471;
+}
+
+@media (prefers-color-scheme: dark) {
+  .clickbait-reveal-btn {
+    color: #8b98a5;
+    border-color: #38444d;
+  }
+
+  .clickbait-reveal-btn:hover {
+    background: #1d2226;
+    border-color: #8b98a5;
+  }
+}
+
+/* Processing indicator */
+.clickbait-processing {
+  position: relative;
+}
+
+.clickbait-processing::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e0e0e0;
+  border-top-color: #1d9bf0;
+  border-radius: 50%;
+  animation: clickbait-spin 0.8s linear infinite;
+}
+
+@keyframes clickbait-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
