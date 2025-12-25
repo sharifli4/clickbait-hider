@@ -10,10 +10,19 @@ Works with local AI (Ollama) so your data never leaves your computer, or cloud p
 
 ## Install
 
-1. Clone the repo
-2. Go to `chrome://extensions/`
-3. Turn on Developer mode
-4. Load unpacked → select this folder
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/your-username/clickbait-hider.git
+   cd clickbait-hider
+   ```
+
+2. Open Chrome and go to `chrome://extensions/`
+
+3. Enable **Developer mode** (toggle in the top right corner)
+
+4. Click **Load unpacked** and select the `clickbait-hider` folder
+
+5. The extension icon should appear in your toolbar. Click it to configure your AI provider.
 
 ## Ollama Setup
 
