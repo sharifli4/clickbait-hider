@@ -235,7 +235,8 @@ async function sendErrorReport() {
   const version = chrome.runtime.getManifest().version;
   let report = `Clickbait Hider Error Report\n`;
   report += `Version: ${version}\n`;
-  report += `Time: ${new Date().toISOString()}\n\n`;
+  report += `Time: ${new Date().toISOString()}\n`;
+  report += `Send to: ${REPORT_EMAIL}\n\n`;
 
   errorLogs.forEach((err, i) => {
     report += `[${i + 1}] ${err.timestamp}\n`;
@@ -244,9 +245,13 @@ async function sendErrorReport() {
     report += `Stack: ${err.stack}\n\n`;
   });
 
-  const subject = encodeURIComponent(`Clickbait Hider Error Report v${version}`);
-  const body = encodeURIComponent(report);
-  window.open(`mailto:${REPORT_EMAIL}?subject=${subject}&body=${body}`);
+  try {
+    await navigator.clipboard.writeText(report);
+    showStatus(`Report copied! Send to: ${REPORT_EMAIL}`);
+  } catch (e) {
+    // Fallback: show in prompt
+    prompt('Copy this report and send to ' + REPORT_EMAIL, report);
+  }
 }
 
 async function clearErrors() {
