@@ -12,7 +12,7 @@ Works with local AI (Ollama) so your data never leaves your computer, or cloud p
 
 1. Clone the repo:
    ```bash
-   git clone https://github.com/your-username/clickbait-hider.git
+   git clone https://github.com/sharifli4/clickbait-hider.git
    cd clickbait-hider
    ```
 
