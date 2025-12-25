@@ -409,6 +409,21 @@ sudo systemctl restart ollama</code>
         <button id="resetStatsBtn" class="btn btn-danger">Reset</button>
       </div>
     </div>
+
+    <div class="card">
+      <h2 class="card-title">Error Logs</h2>
+      <div class="reset-section" style="margin-top: 0; padding-top: 0; border: none;">
+        <div class="reset-info">
+          <span id="errorCount">0 errors logged</span>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button id="sendReportBtn" class="btn btn-secondary">Send Report</button>
+          <button id="clearErrorsBtn" class="btn btn-danger">Clear</button>
+        </div>
+      </div>
+      <div id="errorList" style="margin-top: 16px; display: none; max-height: 200px; overflow-y: auto; font-size: 12px; background: #1e2732; padding: 12px; border-radius: 8px;">
+      </div>
+    </div>
   </div>
 
   <script src="options.js"></script>

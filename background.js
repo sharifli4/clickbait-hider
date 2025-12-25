@@ -4,6 +4,7 @@ import { OllamaProvider } from './providers/ollama.js';
 import { OpenAIProvider } from './providers/openai.js';
 import { AnthropicProvider } from './providers/anthropic.js';
 import { ChromeAIProvider } from './providers/chrome-ai.js';
+import { logError, setProviderType } from './error-logger.js';
 
 // Cache for analysis results
 const analysisCache = new Map();
@@ -35,6 +36,7 @@ async function loadProvider() {
   const providerConfig = result.providerConfig || {};
   const config = providerConfig[type] || {};
 
+  setProviderType(type);
   currentProvider = createProvider(type, config);
   return currentProvider;
 }
@@ -110,6 +112,7 @@ async function handleAnalyze(message) {
     return result;
   } catch (error) {
     console.error('Analysis failed:', error);
+    logError(error, 'Analysis failed');
     return { isClickbait: false, error: error.message };
   }
 }
@@ -132,6 +135,7 @@ async function handleTestConnection(message) {
     const result = await provider.testConnection();
     return result;
   } catch (error) {
+    logError(error, 'Test connection failed');
     return { success: false, error: error.message };
   }
 }

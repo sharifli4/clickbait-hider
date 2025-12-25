@@ -6,6 +6,12 @@ const statusMessage = document.getElementById('statusMessage');
 const testBtn = document.getElementById('testBtn');
 const saveBtn = document.getElementById('saveBtn');
 const resetStatsBtn = document.getElementById('resetStatsBtn');
+const sendReportBtn = document.getElementById('sendReportBtn');
+const clearErrorsBtn = document.getElementById('clearErrorsBtn');
+const errorCountEl = document.getElementById('errorCount');
+const errorListEl = document.getElementById('errorList');
+
+const REPORT_EMAIL = 'sharifli.kenan@outlook.com';
 
 // Provider-specific elements
 const providerSections = {
@@ -196,6 +202,61 @@ providerSelect.addEventListener('change', () => {
 testBtn.addEventListener('click', testConnection);
 saveBtn.addEventListener('click', saveSettings);
 resetStatsBtn.addEventListener('click', resetStats);
+sendReportBtn.addEventListener('click', sendErrorReport);
+clearErrorsBtn.addEventListener('click', clearErrors);
+
+// Error log functions
+async function loadErrorLogs() {
+  const { errorLogs = [] } = await chrome.storage.local.get(['errorLogs']);
+  errorCountEl.textContent = `${errorLogs.length} error${errorLogs.length !== 1 ? 's' : ''} logged`;
+
+  if (errorLogs.length > 0) {
+    errorListEl.style.display = 'block';
+    errorListEl.innerHTML = errorLogs.map(err =>
+      `<div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #38444d;">
+        <div style="color: #f4212e;">${err.message}</div>
+        <div style="color: #71767b; font-size: 11px;">${err.timestamp} | ${err.provider}</div>
+      </div>`
+    ).join('');
+  } else {
+    errorListEl.style.display = 'none';
+  }
+
+  return errorLogs;
+}
+
+async function sendErrorReport() {
+  const errorLogs = await loadErrorLogs();
+  if (errorLogs.length === 0) {
+    showStatus('No errors to report.', false);
+    return;
+  }
+
+  const version = chrome.runtime.getManifest().version;
+  let report = `Clickbait Hider Error Report\n`;
+  report += `Version: ${version}\n`;
+  report += `Time: ${new Date().toISOString()}\n\n`;
+
+  errorLogs.forEach((err, i) => {
+    report += `[${i + 1}] ${err.timestamp}\n`;
+    report += `Provider: ${err.provider}\n`;
+    report += `Error: ${err.message}\n`;
+    report += `Stack: ${err.stack}\n\n`;
+  });
+
+  const subject = encodeURIComponent(`Clickbait Hider Error Report v${version}`);
+  const body = encodeURIComponent(report);
+  window.open(`mailto:${REPORT_EMAIL}?subject=${subject}&body=${body}`);
+}
+
+async function clearErrors() {
+  if (confirm('Clear all error logs?')) {
+    await chrome.storage.local.set({ errorLogs: [] });
+    loadErrorLogs();
+    showStatus('Error logs cleared.');
+  }
+}
 
 // Initialize
 loadSettings();
+loadErrorLogs();
